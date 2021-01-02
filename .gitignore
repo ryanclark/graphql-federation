@@ -1,3 +1,16 @@
+.brackets.json
+.idea
+*.sublime-workspace
+.tern-project
+.vscode/
+.DS_Store
+
+node_modules
+dist
+
+yarn-debug.log*
+yarn-error.log*
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -11,5 +24,11 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Emacs stuff
+*~
+\#*#
+.\#*#
+
+# Tools
+/tools/godownloader
+/tools/goreleaser

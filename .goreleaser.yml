@@ -1,0 +1,60 @@
+---
+project_name: schema-vault
+
+release:
+  github:
+    owner: udemy
+    name: schema-vault
+
+builds:
+  - binary: schema-vault
+    goos:
+      - linux
+    goarch:
+      - amd64
+    env:
+      - CGO_ENABLED=0
+    main: ./cmd/schema-vault/
+    ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}}
+
+dockers:
+  - image_templates:
+      - 'quay.io/udemy/schema-vault:{{ .Tag }}'
+      - 'quay.io/udemy/schema-vault:v{{ .Major }}.{{ .Minor }}'
+      - 'quay.io/udemy/schema-vault:latest'
+    dockerfile: Dockerfile
+    binaries:
+      - schema-vault
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+
+archives:
+  - format: tar.gz
+    wrap_in_directory: true
+    name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    files:
+      - LICENSE
+      - README.md
+
+snapshot:
+  name_template: SNAPSHOT-{{ .Commit }}
+
+checksum:
+  name_template: '{{ .ProjectName }}-{{ .Version }}-checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^dev:'
+      - 'README'
+      - Merge pull request
+      - Merge branch
